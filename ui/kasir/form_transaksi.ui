@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FormTransaksi</class>
+ <widget class="QMainWindow" name="FormTransaksi">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1000</width><height>700</height></rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form Transaksi</string>
+  </property>
+
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="mainLayout">
+
+    <!-- LEFT PANEL -->
+    <item>
+     <widget class="QFrame" name="leftPanel">
+      <layout class="QVBoxLayout" name="leftLayout">
+
+       <!-- SEARCH BAR -->
+       <item>
+        <layout class="QHBoxLayout" name="searchRow">
+         <item>
+          <widget class="QLineEdit" name="inputSearchProduk">
+           <property name="placeholderText"><string>Cari produk…</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnCariProduk">
+           <property name="text"><string>Cari</string></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+
+       <!-- TABLE PRODUK -->
+       <item>
+        <widget class="QTableWidget" name="tableProduk">
+         <property name="columnCount"><number>4</number></property>
+         <column><property name="text"><string>ID</string></property></column>
+         <column><property name="text"><string>Nama</string></property></column>
+         <column><property name="text"><string>Harga</string></property></column>
+         <column><property name="text"><string>Stok</string></property></column>
+        </widget>
+       </item>
+
+       <!-- INPUT QTY + ADD -->
+       <item>
+        <layout class="QHBoxLayout" name="qtyRow">
+         <item>
+          <widget class="QSpinBox" name="spinQty">
+           <property name="minimum"><number>1</number></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnTambahKeranjang">
+           <property name="text"><string>Tambah ke Keranjang</string></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+
+      </layout>
+     </widget>
+    </item>
+
+    <!-- RIGHT PANEL -->
+    <item>
+     <widget class="QFrame" name="rightPanel">
+      <layout class="QVBoxLayout" name="rightLayout">
+
+       <item>
+        <widget class="QLabel" name="lblKeranjangTitle">
+         <property name="text"><string>Keranjang</string></property>
+         <property name="alignment"><set>Qt::AlignCenter</set></property>
+        </widget>
+       </item>
+
+       <!-- TABLE KERANJANG -->
+       <item>
+        <widget class="QTableWidget" name="tableKeranjang">
+         <property name="columnCount"><number>4</number></property>
+         <column><property name="text"><string>Nama</string></property></column>
+         <column><property name="text"><string>Qty</string></property></column>
+         <column><property name="text"><string>Harga</string></property></column>
+         <column><property name="text"><string>Subtotal</string></property></column>
+        </widget>
+       </item>
+
+       <!-- TOTAL -->
+       <item>
+        <layout class="QHBoxLayout" name="totalRow">
+         <item><widget class="QLabel" name="lblTotalText"><property name="text"><string>Total:</string></property></widget></item>
+         <item><widget class="QLabel" name="lblTotal"><property name="text"><string>Rp 0</string></property></widget></item>
+        </layout>
+       </item>
+
+       <!-- BAYAR -->
+       <item>
+        <layout class="QFormLayout" name="bayarRow">
+         <item row="0" column="0"><widget class="QLabel" name="lblBayarText"><property name="text"><string>Bayar:</string></property></widget></item>
+         <item row="0" column="1"><widget class="QLineEdit" name="inputBayar"/></item>
+
+         <item row="1" column="0"><widget class="QLabel" name="lblKembalianText"><property name="text"><string>Kembalian:</string></property></widget></item>
+         <item row="1" column="1"><widget class="QLabel" name="lblKembalian"><property name="text"><string>Rp 0</string></property></widget></item>
+        </layout>
+       </item>
+
+       <!-- BUTTONS -->
+       <item>
+        <layout class="QHBoxLayout" name="buttonRow">
+         <item><widget class="QPushButton" name="btnHapusItem"><property name="text"><string>Hapus Item</string></property></widget></item>
+         <item><widget class="QPushButton" name="btnReset"><property name="text"><string>Reset</string></property></widget></item>
+         <item><widget class="QPushButton" name="btnSimpanTransaksi"><property name="text"><string>Simpan Transaksi</string></property></widget></item>
+         <item><widget class="QPushButton" name="btnKembali"><property name="text"><string>Kembali</string></property></widget></item>
+        </layout>
+       </item>
+
+      </layout>
+     </widget>
+    </item>
+
+   </layout>
+  </widget>
+
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
