@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem, QHeaderView
+from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem, QHeaderView, QFormLayout, QFrame
 
 from database.connect import get_connection
 from models.produk import Produk
@@ -13,77 +13,125 @@ from ui.kasir.form_struk import Ui_MainWindow as StrukWindow
 class Ui_FormTransaksi(object):
 
     # =====================================================
-    # SETUP UI (DESIGN ASLI — TIDAK DIUBAH)
+    # STYLESHEET MODERN & CERIA
+    # =====================================================
+    TRANSACTION_STYLE = """
+        /* GLOBAL STYLE */
+        QWidget {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 14px;
+            color: #333333; /* Teks gelap netral */
+        }
+        QMainWindow, QWidget#centralwidget {
+            background-color: #fcfcfc; /* Background Putih Krem */
+        }
+        QFrame {
+            background-color: #ffffff;
+            border-radius: 12px; /* Sudut lebih lembut */
+            border: 1px solid #e0e0e0; /* Border halus */
+        }
+        
+        /* INPUT & SPINBOX */
+        QLineEdit, QSpinBox {
+            padding: 10px;
+            border: 1px solid #cfd8dc; /* Abu-abu Teal */
+            border-radius: 8px;
+            background-color: #f7f7f7;
+        }
+        QLineEdit:focus, QSpinBox:focus {
+            border: 2px solid #00bcd4; /* Teal Cerah saat fokus */
+            background-color: white;
+        }
+        
+        /* TABLES */
+        QTableWidget {
+            border: 1px solid #e0e0e0;
+            gridline-color: #f0f0f0;
+            selection-background-color: #b2ebf2; /* Teal muda saat dipilih */
+            selection-color: #333333;
+            border-radius: 8px;
+        }
+        QHeaderView::section {
+            background-color: #e0f2f1; /* Teal Pastel */
+            color: #004d40;
+            padding: 8px;
+            border: 1px solid #b2dfdb;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        
+        /* BUTTONS (GENERAL) */
+        QPushButton {
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            border: none;
+            color: white;
+            min-height: 35px;
+        }
+        QPushButton:hover {
+            opacity: 0.9;
+        }
+
+        /* BUTTONS (SPECIFIC COLORS) */
+        #btnCariProduk { 
+            background-color: #ff9800; /* Orange Ceria */
+        }
+        #btnTambahKeranjang {
+            background-color: #4CAF50; /* Hijau Cerah */
+        }
+        #btnHapusItem { 
+            background-color: #F44336; /* Merah */
+        }
+        #btnReset { 
+            background-color: #90a4ae; /* Abu-abu netral */
+        }
+        #btnSimpanTransaksi {
+            background-color: #00BCD4; /* Teal Utama */
+            font-size: 18px;
+            min-height: 50px;
+        }
+        #btnKembali {
+            background-color: #607d8b; /* Abu-abu Kebiruan */
+            color: white;
+        }
+
+        /* TOTAL FRAME */
+        QFrame#totalBox {
+            background-color: #e0f7fa; /* Teal Sangat Muda */
+            border: 2px solid #00bcd4;
+            border-radius: 10px;
+        }
+    """
+
+    # =====================================================
+    # SETUP UI 
     # =====================================================
     def setupUi(self, FormTransaksi, user_login):
         self.user_login = user_login
         FormTransaksi.setObjectName("FormTransaksi")
-        FormTransaksi.resize(1100, 750)
-
-        # ================= GLOBAL STYLE =================
-        FormTransaksi.setStyleSheet("""
-            QWidget {
-                font-family: 'Segoe UI';
-                font-size: 14px;
-                color: #2c3e50;
-            }
-            QMainWindow {
-                background-color: #f4f6f9;
-            }
-            QFrame {
-                background-color: #ffffff;
-                border-radius: 10px;
-            }
-            QLineEdit, QSpinBox {
-                padding: 8px;
-                border: 1px solid #ccc;
-                border-radius: 6px;
-            }
-            QLineEdit:focus, QSpinBox:focus {
-                border: 1px solid #3498db;
-            }
-            QTableWidget {
-                border: 1px solid #ddd;
-                gridline-color: #eee;
-                selection-background-color: #3498db;
-                selection-color: white;
-            }
-            QHeaderView::section {
-                background-color: #ecf0f1;
-                padding: 6px;
-                border: none;
-                font-weight: bold;
-            }
-            QPushButton {
-                padding: 10px;
-                border-radius: 6px;
-                font-weight: bold;
-                border: none;
-            }
-            QPushButton:hover {
-                opacity: 0.85;
-            }
-        """)
+        FormTransaksi.resize(1150, 780) # Diperlebar agar nyaman
+        FormTransaksi.setStyleSheet(self.TRANSACTION_STYLE) # Terapkan Stylesheet
 
         self.centralwidget = QtWidgets.QWidget(FormTransaksi)
         self.mainLayout = QtWidgets.QHBoxLayout(self.centralwidget)
-        self.mainLayout.setContentsMargins(20, 20, 20, 20)
-        self.mainLayout.setSpacing(20)
+        self.mainLayout.setContentsMargins(30, 30, 30, 30)
+        self.mainLayout.setSpacing(30)
 
         # ================= LEFT PANEL =================
         self.leftPanel = QtWidgets.QFrame()
         self.leftLayout = QtWidgets.QVBoxLayout(self.leftPanel)
         self.leftLayout.setSpacing(15)
 
-        lblProduk = QtWidgets.QLabel("📦 Daftar Produk")
-        lblProduk.setStyleSheet("font-size:18px;font-weight:bold;")
+        lblProduk = QtWidgets.QLabel("📦 Daftar Produk Tersedia")
+        lblProduk.setStyleSheet("font-size:20px;font-weight:bold;color:#00796b;")
         self.leftLayout.addWidget(lblProduk)
 
         searchLayout = QtWidgets.QHBoxLayout()
         self.inputSearchProduk = QtWidgets.QLineEdit()
         self.inputSearchProduk.setPlaceholderText("Cari nama / ID produk...")
-        self.btnCariProduk = QtWidgets.QPushButton("Cari")
-        self.btnCariProduk.setStyleSheet("background-color:#3498db;color:white;")
+        self.btnCariProduk = QtWidgets.QPushButton("Cari 🔎")
+        self.btnCariProduk.setObjectName("btnCariProduk") 
 
         searchLayout.addWidget(self.inputSearchProduk)
         searchLayout.addWidget(self.btnCariProduk)
@@ -105,15 +153,15 @@ class Ui_FormTransaksi(object):
         self.leftLayout.addWidget(self.tableProduk)
 
         qtyLayout = QtWidgets.QHBoxLayout()
-        lblQty = QtWidgets.QLabel("Jumlah:")
+        lblQty = QtWidgets.QLabel("Jumlah Item:")
+        lblQty.setStyleSheet("font-weight:bold;")
         self.spinQty = QtWidgets.QSpinBox()
         self.spinQty.setMinimum(1)
-        self.spinQty.setFixedWidth(80)
+        self.spinQty.setFixedWidth(100)
+        self.spinQty.setMaximum(9999) # Batas maksimum
 
         self.btnTambahKeranjang = QtWidgets.QPushButton("+ Tambah ke Keranjang")
-        self.btnTambahKeranjang.setStyleSheet(
-            "background-color:#27ae60;color:white;"
-        )
+        self.btnTambahKeranjang.setObjectName("btnTambahKeranjang")
 
         qtyLayout.addWidget(lblQty)
         qtyLayout.addWidget(self.spinQty)
@@ -126,15 +174,15 @@ class Ui_FormTransaksi(object):
         self.rightLayout = QtWidgets.QVBoxLayout(self.rightPanel)
         self.rightLayout.setSpacing(15)
 
-        lblKeranjang = QtWidgets.QLabel("🛒 Keranjang Belanja")
+        lblKeranjang = QtWidgets.QLabel("🛒 Keranjang Belanja Anda")
         lblKeranjang.setAlignment(QtCore.Qt.AlignCenter)
-        lblKeranjang.setStyleSheet("font-size:18px;font-weight:bold;")
+        lblKeranjang.setStyleSheet("font-size:20px;font-weight:bold;color:#00796b;")
         self.rightLayout.addWidget(lblKeranjang)
 
         self.tableKeranjang = QtWidgets.QTableWidget()
         self.tableKeranjang.setColumnCount(4)
         self.tableKeranjang.setHorizontalHeaderLabels(
-            ["Nama Item", "Qty", "Harga", "Subtotal"]
+            ["Nama Item", "Qty", "Harga (Rp)", "Subtotal (Rp)"]
         )
         self.tableKeranjang.verticalHeader().setVisible(False)
         self.tableKeranjang.setAlternatingRowColors(True)
@@ -146,49 +194,49 @@ class Ui_FormTransaksi(object):
         self.rightLayout.addWidget(self.tableKeranjang)
 
         # ===== TOTAL =====
-        totalBox = QtWidgets.QFrame()
-        totalBox.setStyleSheet("background-color:#f8f9fa;border-radius:8px;")
-        totalLayout = QtWidgets.QHBoxLayout(totalBox)
+        self.totalBox = QtWidgets.QFrame()
+        self.totalBox.setObjectName("totalBox")
+        totalLayout = QtWidgets.QHBoxLayout(self.totalBox)
 
-        lblTotalText = QtWidgets.QLabel("TOTAL")
+        lblTotalText = QtWidgets.QLabel("TOTAL BELANJA")
         lblTotalText.setStyleSheet("font-weight:bold;font-size:16px;")
 
         self.lblTotal = QtWidgets.QLabel("Rp 0")
-        self.lblTotal.setStyleSheet("font-size:26px;font-weight:bold;color:#e74c3c;")
+        self.lblTotal.setStyleSheet("font-size:30px;font-weight:bold;color:#e74c3c;") # Merah cerah untuk Total
         self.lblTotal.setAlignment(QtCore.Qt.AlignRight)
 
         totalLayout.addWidget(lblTotalText)
         totalLayout.addWidget(self.lblTotal)
-        self.rightLayout.addWidget(totalBox)
+        self.rightLayout.addWidget(self.totalBox)
 
         # ===== BAYAR =====
         bayarLayout = QtWidgets.QFormLayout()
         self.inputBayar = QtWidgets.QLineEdit()
         self.inputBayar.setValidator(QtGui.QIntValidator())
+        self.inputBayar.setPlaceholderText("Masukkan jumlah uang tunai...")
 
         self.lblKembalian = QtWidgets.QLabel("Rp 0")
-        self.lblKembalian.setStyleSheet("font-weight:bold;color:#27ae60;")
+        self.lblKembalian.setStyleSheet("font-weight:bold;font-size:16px;color:#27ae60;") # Hijau untuk Kembalian
 
-        bayarLayout.addRow("Bayar (Rp):", self.inputBayar)
+        bayarLayout.addRow("Uang Bayar (Rp):", self.inputBayar)
         bayarLayout.addRow("Kembalian:", self.lblKembalian)
         self.rightLayout.addLayout(bayarLayout)
 
         # ===== BUTTON =====
         btnGrid = QtWidgets.QGridLayout()
 
-        self.btnHapusItem = QtWidgets.QPushButton("Hapus Item")
-        self.btnHapusItem.setStyleSheet("background-color:#e74c3c;color:white;")
+        self.btnHapusItem = QtWidgets.QPushButton("Hapus Item 🗑️")
+        self.btnHapusItem.setObjectName("btnHapusItem")
 
-        self.btnReset = QtWidgets.QPushButton("Reset")
-        self.btnReset.setStyleSheet("background-color:#95a5a6;color:white;")
+        self.btnReset = QtWidgets.QPushButton("Reset Semua")
+        self.btnReset.setObjectName("btnReset")
 
-        self.btnSimpanTransaksi = QtWidgets.QPushButton("Simpan & Cetak")
-        self.btnSimpanTransaksi.setMinimumHeight(45)
-        self.btnSimpanTransaksi.setStyleSheet(
-            "background-color:#2980b9;color:white;font-size:16px;"
-        )
+        self.btnSimpanTransaksi = QtWidgets.QPushButton("Simpan & Cetak Struk 🖨️")
+        self.btnSimpanTransaksi.setObjectName("btnSimpanTransaksi")
+        self.btnSimpanTransaksi.setMinimumHeight(60)
 
-        self.btnKembali = QtWidgets.QPushButton("Kembali")
+        self.btnKembali = QtWidgets.QPushButton("Kembali ke Dashboard")
+        self.btnKembali.setObjectName("btnKembali")
 
         btnGrid.addWidget(self.btnHapusItem, 0, 0)
         btnGrid.addWidget(self.btnReset, 0, 1)
@@ -223,7 +271,12 @@ class Ui_FormTransaksi(object):
         self.tableProduk.setRowCount(len(rows))
         for i, row in enumerate(rows):
             for j, val in enumerate(row):
-                self.tableProduk.setItem(i, j, QTableWidgetItem(str(val)))
+                # Format Harga di kolom 2
+                if j == 2:
+                    text = f"Rp {float(val):,.0f}"
+                else:
+                    text = str(val)
+                self.tableProduk.setItem(i, j, QTableWidgetItem(text))
 
     # =====================================================
     # SEARCH PRODUK
@@ -243,7 +296,12 @@ class Ui_FormTransaksi(object):
         self.tableProduk.setRowCount(len(rows))
         for i, row in enumerate(rows):
             for j, val in enumerate(row):
-                self.tableProduk.setItem(i, j, QTableWidgetItem(str(val)))
+                # Format Harga di kolom 2
+                if j == 2:
+                    text = f"Rp {float(val):,.0f}"
+                else:
+                    text = str(val)
+                self.tableProduk.setItem(i, j, QTableWidgetItem(text))
 
     # =====================================================
     # TAMBAH KE KERANJANG (STOK REALTIME UI)
@@ -251,44 +309,62 @@ class Ui_FormTransaksi(object):
     def tambahKeranjang(self):
         row = self.tableProduk.currentRow()
         if row < 0:
+            QMessageBox.warning(None, "Peringatan", "Pilih produk dari daftar terlebih dahulu.")
             return
 
         nama = self.tableProduk.item(row, 1).text()
-        harga = int(float(self.tableProduk.item(row, 2).text()))
+        # Ekstrak harga dari format "Rp 12,345"
+        try:
+            harga_str = self.tableProduk.item(row, 2).text().replace("Rp ", "").replace(",", "")
+            harga = int(float(harga_str))
+        except ValueError:
+             QMessageBox.critical(None, "Error Data", "Format harga di tabel produk tidak valid.")
+             return
+
         stok = int(self.tableProduk.item(row, 3).text())
         qty = self.spinQty.value()
 
         if qty > stok:
-            QMessageBox.warning(None, "Error", "Stok tidak cukup")
+            QMessageBox.warning(None, "Stok Kurang", "Stok produk tidak cukup untuk jumlah yang diminta.")
             return
 
+        # Cari item di keranjang
+        item_found = False
         for i in range(self.tableKeranjang.rowCount()):
             if self.tableKeranjang.item(i, 0).text() == nama:
                 old_qty = int(self.tableKeranjang.item(i, 1).text())
-                old_sub = int(self.tableKeranjang.item(i, 3).text())
+                # Ekstrak subtotal dari format "Rp 12,345"
+                old_sub_str = self.tableKeranjang.item(i, 3).text().replace("Rp ", "").replace(",", "")
+                old_sub = int(old_sub_str)
+                
                 new_qty = old_qty + qty
                 new_sub = new_qty * harga
 
                 self.tableKeranjang.setItem(i, 1, QTableWidgetItem(str(new_qty)))
-                self.tableKeranjang.setItem(i, 3, QTableWidgetItem(str(new_sub)))
+                self.tableKeranjang.setItem(i, 3, QTableWidgetItem(f"Rp {new_sub:,.0f}"))
 
                 self.total += (new_sub - old_sub)
-                self.lblTotal.setText(f"Rp {self.total}")
+                self.lblTotal.setText(f"Rp {self.total:,.0f}")
 
+                # Update stok di tabel produk
                 self.tableProduk.setItem(row, 3, QTableWidgetItem(str(stok - qty)))
-                return
+                item_found = True
+                break
+        
+        if not item_found:
+            subtotal = harga * qty
+            r = self.tableKeranjang.rowCount()
+            self.tableKeranjang.insertRow(r)
+            
+            self.tableKeranjang.setItem(r, 0, QTableWidgetItem(nama))
+            self.tableKeranjang.setItem(r, 1, QTableWidgetItem(str(qty)))
+            self.tableKeranjang.setItem(r, 2, QTableWidgetItem(f"Rp {harga:,.0f}"))
+            self.tableKeranjang.setItem(r, 3, QTableWidgetItem(f"Rp {subtotal:,.0f}"))
 
-        subtotal = harga * qty
-        r = self.tableKeranjang.rowCount()
-        self.tableKeranjang.insertRow(r)
-        self.tableKeranjang.setItem(r, 0, QTableWidgetItem(nama))
-        self.tableKeranjang.setItem(r, 1, QTableWidgetItem(str(qty)))
-        self.tableKeranjang.setItem(r, 2, QTableWidgetItem(str(harga)))
-        self.tableKeranjang.setItem(r, 3, QTableWidgetItem(str(subtotal)))
+            self.total += subtotal
+            self.lblTotal.setText(f"Rp {self.total:,.0f}")
+            self.tableProduk.setItem(row, 3, QTableWidgetItem(str(stok - qty)))
 
-        self.total += subtotal
-        self.lblTotal.setText(f"Rp {self.total}")
-        self.tableProduk.setItem(row, 3, QTableWidgetItem(str(stok - qty)))
 
     # =====================================================
     # HAPUS ITEM (STOK BALIK)
@@ -296,58 +372,84 @@ class Ui_FormTransaksi(object):
     def hapusItem(self):
         row = self.tableKeranjang.currentRow()
         if row < 0:
+            QMessageBox.warning(None, "Peringatan", "Pilih item di keranjang untuk dihapus.")
             return
 
         nama = self.tableKeranjang.item(row, 0).text()
         qty = int(self.tableKeranjang.item(row, 1).text())
-        subtotal = int(self.tableKeranjang.item(row, 3).text())
+        subtotal_str = self.tableKeranjang.item(row, 3).text().replace("Rp ", "").replace(",", "")
+        subtotal = int(subtotal_str)
 
         for i in range(self.tableProduk.rowCount()):
             if self.tableProduk.item(i, 1).text() == nama:
+                # Update stok di tabel produk
                 stok = int(self.tableProduk.item(i, 3).text())
                 self.tableProduk.setItem(i, 3, QTableWidgetItem(str(stok + qty)))
                 break
 
         self.total -= subtotal
-        self.lblTotal.setText(f"Rp {self.total}")
+        self.lblTotal.setText(f"Rp {self.total:,.0f}")
         self.tableKeranjang.removeRow(row)
+        self.hitungKembalian()
 
     # =====================================================
     # RESET
     # =====================================================
     def resetKeranjang(self):
+        # Kembalikan stok yang tersisa di keranjang
+        if self.tableKeranjang.rowCount() > 0:
+            # Iterasi keranjang untuk mengembalikan stok ke tabel produk
+            for r in range(self.tableKeranjang.rowCount()):
+                nama = self.tableKeranjang.item(r, 0).text()
+                qty = int(self.tableKeranjang.item(r, 1).text())
+
+                for i in range(self.tableProduk.rowCount()):
+                    if self.tableProduk.item(i, 1).text() == nama:
+                        stok = int(self.tableProduk.item(i, 3).text())
+                        self.tableProduk.setItem(i, 3, QTableWidgetItem(str(stok + qty)))
+                        break
+        
         self.tableKeranjang.setRowCount(0)
         self.total = 0
         self.lblTotal.setText("Rp 0")
         self.lblKembalian.setText("Rp 0")
         self.inputBayar.clear()
-        self.loadProduk()
-
+        # Tidak perlu loadProduk penuh, stok sudah dikembalikan di UI.
+        
     # =====================================================
     # KEMBALIAN
     # =====================================================
     def hitungKembalian(self):
         try:
-            bayar = int(self.inputBayar.text())
-            self.lblKembalian.setText(f"Rp {bayar - self.total}")
+            bayar = int(self.inputBayar.text().replace(".", "")) # Hapus titik jika ada
+            kembali = bayar - self.total
+            self.lblKembalian.setText(f"Rp {kembali:,.0f}")
+            if kembali < 0:
+                 self.lblKembalian.setStyleSheet("font-weight:bold;font-size:16px;color:#F44336;")
+            else:
+                 self.lblKembalian.setStyleSheet("font-weight:bold;font-size:16px;color:#27ae60;")
+
         except:
             self.lblKembalian.setText("Rp 0")
+            self.lblKembalian.setStyleSheet("font-weight:bold;font-size:16px;color:#27ae60;")
+
 
     # =====================================================
     # SIMPAN TRANSAKSI (DATABASE)
     # =====================================================
     def simpanTransaksi(self):
         if self.tableKeranjang.rowCount() == 0:
+            QMessageBox.warning(None, "Error", "Keranjang belanja masih kosong!")
             return
 
         try:
-            bayar = int(self.inputBayar.text())
+            bayar = int(self.inputBayar.text().replace(".", ""))
         except:
-            QMessageBox.warning(None, "Error", "Masukkan uang bayar!")
+            QMessageBox.warning(None, "Error", "Masukkan jumlah uang bayar yang valid!")
             return
 
         if bayar < self.total:
-            QMessageBox.warning(None, "Error", "Uang tidak cukup")
+            QMessageBox.warning(None, "Error", "Uang yang dibayarkan tidak cukup.")
             return
 
         kembali = bayar - self.total
@@ -360,7 +462,8 @@ class Ui_FormTransaksi(object):
             for i in range(self.tableKeranjang.rowCount()):
                 nama = self.tableKeranjang.item(i, 0).text()
                 qty = int(self.tableKeranjang.item(i, 1).text())
-
+                
+                # Mendapatkan ID dan harga dari DB
                 cursor.execute(
                     "SELECT id_produk, harga FROM produk WHERE nama_produk=%s",
                     (nama,)
@@ -368,11 +471,11 @@ class Ui_FormTransaksi(object):
                 row = cursor.fetchone()
 
                 if not row:
-                    raise Exception(f"Produk '{nama}' tidak ditemukan")
+                    raise Exception(f"Produk '{nama}' tidak ditemukan di database.")
 
-                idp, harga = row
-                harga = int(float(harga))
-                subtotal = harga * qty
+                idp, harga_db = row
+                harga_db = int(float(harga_db))
+                subtotal = harga_db * qty
 
                 # detail transaksi
                 det = DetailTransaksi(id_produk=idp, qty=qty)
@@ -382,7 +485,7 @@ class Ui_FormTransaksi(object):
                 list_struk.append({
                     "produk": nama,
                     "qty": qty,
-                    "harga": harga,
+                    "harga": harga_db,
                     "subtotal": subtotal
                 })
 
@@ -391,8 +494,8 @@ class Ui_FormTransaksi(object):
 
             QMessageBox.information(
                 None,
-                "Sukses",
-                f"Transaksi #{id_trx} berhasil disimpan!"
+                "Sukses!",
+                f"Transaksi #{id_trx} berhasil disimpan! Struk akan dicetak."
             )
 
             # =========================
@@ -406,10 +509,9 @@ class Ui_FormTransaksi(object):
                 tr.total,
                 bayar,
                 kembali,
-                nama_kasir=self.user_login.nama
+                nama_kasir=self.user_login.nama,
             )
 
-            # dialog modal (harus ditutup dulu)
             self.struk_window.exec_()
 
             # setelah struk ditutup → reset
@@ -417,7 +519,7 @@ class Ui_FormTransaksi(object):
 
         except Exception as e:
             db.rollback()
-            QMessageBox.critical(None, "Error", str(e))
+            QMessageBox.critical(None, "Error Transaksi", f"Gagal menyimpan transaksi: {str(e)}")
 
         finally:
             cursor.close()
@@ -428,7 +530,13 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QMainWindow()
+    
+    # Dummy user login for testing
+    class DummyUser:
+        def __init__(self):
+            self.nama = "Kasir Test"
+    
     ui = Ui_FormTransaksi()
-    ui.setupUi(Form)
+    ui.setupUi(Form, DummyUser())
     Form.show()
     sys.exit(app.exec_())

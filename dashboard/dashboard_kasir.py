@@ -1,78 +1,157 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QGridLayout, QWidget
+
+# Import form-form yang dibutuhkan (dibiarkan seperti di kode asli)
+# from ui.kasir.form_transaksi import Ui_FormTransaksi
+# from ui.kasir.form_laporan import Ui_FormLaporan
+# from ui.form_login import Ui_MainWindow as LoginForm
+
+
+# =================================================================
+# 🎨 STYLESHEET DASHBOARD KASIR (MINIMALIS & CERIA)
+# =================================================================
+KASIR_DASHBOARD_STYLE = """
+/* Background Utama */
+QWidget#centralwidget {
+    background-color: #fcfcfc; /* Putih Krem */
+}
+
+/* Judul Utama */
+QLabel#label { 
+    color: #00796b; /* Teal Gelap */
+    font-size: 28px;
+    font-weight: bold;
+    padding-bottom: 10px;
+    margin-bottom: 20px; 
+    border-bottom: 3px solid #b2dfdb; 
+}
+
+/* Styling Tombol Aksi (General) */
+QPushButton {
+    color: white;
+    border: none;
+    border-radius: 12px; 
+    padding: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Tombol Transaksi (Aksi Utama) - HIJAU */
+QPushButton#pushButton { 
+    background-color: #4CAF50; /* Hijau Cerah */
+}
+QPushButton#pushButton:hover {
+    background-color: #388E3C;
+}
+
+/* Tombol Laporan (Aksi Sekunder) - TEAL */
+QPushButton#pushButton_3 { 
+    background-color: #00BCD4; /* Teal Cerah */
+    color: white;
+}
+QPushButton#pushButton_3:hover {
+    background-color: #0097A7;
+}
+
+
+/* Tombol Logout */
+QPushButton#pushButton_logout {
+    background-color: #607d8b; /* Abu-abu Kebiruan */
+    color: white;
+    font-size: 14px;
+    border-radius: 8px;
+    padding: 5px 10px; 
+}
+QPushButton#pushButton_logout:hover {
+    background-color: #455a64;
+}
+"""
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow, user_login):
         self.user_login = user_login
+        self.MainWindow = MainWindow 
         
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
-
-        self.MainWindow = MainWindow  # simpan referensi window
-
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        self.centralwidget.setStyleSheet(KASIR_DASHBOARD_STYLE) # Terapkan Stylesheet
 
-        # ==================== BUTTON MULAI TRANSAKSI ====================
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(130, 230, 231, 121))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(True)
-        self.pushButton.setFont(font)
-        self.pushButton.setStyleSheet("""
-            background: qlineargradient(
-                x1:0, y1:0, x2:1, y2:1,
-                stop:0 #66d9a3,
-                stop:1 #33cc88
-            );
-            color: white;
-            border-radius: 8px;
-        """)
+        # -----------------------------------------------------
+        # PERBAIKAN UTAMA: Pusatkan Konten Menggunakan QVBoxLayout
+        # -----------------------------------------------------
+        
+        root_layout = QtWidgets.QVBoxLayout(self.centralwidget)
+        root_layout.setContentsMargins(50, 20, 50, 20)
+        
+        # Tambahkan stretch di atas untuk centering vertikal
+        root_layout.addStretch(1) 
 
-        # ==================== LABEL JUDUL ====================
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(230, 20, 351, 51))
-        font = QtGui.QFont()
-        font.setPointSize(18)
-        font.setBold(True)
-        self.label.setFont(font)
+        # --- CONTENT CONTAINER (Wadah semua elemen yang akan di-center) ---
+        content_container = QtWidgets.QWidget(self.centralwidget)
+        content_layout = QtWidgets.QVBoxLayout(content_container)
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        content_layout.setSpacing(40) # Jarak antar elemen utama
 
-        # ==================== BUTTON LIHAT LAPORAN ====================
-        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_3.setGeometry(QtCore.QRect(450, 230, 231, 121))
-        font = QtGui.QFont()
-        font.setBold(True)
-        self.pushButton_3.setFont(font)
-        self.pushButton_3.setStyleSheet("""
-            background: qlineargradient(
-                x1:0, y1:0, x2:1, y2:1,
-                stop:0 #d9d9d9,
-                stop:1 #bfbfbf
-            );
-            color: black;
-            border-radius: 8px;
-        """)
-
-        # ==================== BUTTON LOGOUT ====================
+        # 1. HEADER (Judul + Logout)
+        header_layout = QtWidgets.QHBoxLayout()
+        header_layout.setAlignment(QtCore.Qt.AlignTop) 
+        
+        self.label = QtWidgets.QLabel(content_container)
+        self.label.setObjectName("label")
+        self.label.setText("DASHBOARD KASIR")
+        self.label.setAlignment(QtCore.Qt.AlignCenter) # Centerkan teks di label
+        
+        # Tambahkan ruang kosong di kiri judul (untuk mengimbangi tombol logout)
+        header_layout.addSpacing(150) 
+        
+        # Tambahkan label judul (center)
+        header_layout.addWidget(self.label, 1) 
+        
+        # Tombol Logout
         self.pushButton_logout = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_logout.setGeometry(QtCore.QRect(630, 30, 141, 41))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(True)
-        self.pushButton_logout.setFont(font)
-        self.pushButton_logout.setStyleSheet("""
-            QPushButton {
-                background-color: #4A4A4A;
-                color: white;
-                border-radius: 8px;
-            }
-            QPushButton:hover {
-                background-color: #3A3A3A;
-            }
-        """)
+        self.pushButton_logout.setObjectName("pushButton_logout")
+        self.pushButton_logout.setFixedSize(140, 40)
+        header_layout.addWidget(self.pushButton_logout)
+
+        content_layout.addLayout(header_layout)
+        
+        # 2. Kontainer Tombol Utama (Pusatkan Horizontal)
+        button_container = QtWidgets.QHBoxLayout()
+        button_container.setAlignment(QtCore.Qt.AlignCenter)
+        button_container.setSpacing(40)
+
+        # Ukuran Fixed Tombol
+        FIXED_WIDTH = 230
+        FIXED_HEIGHT = 120
+
+        # BUTTON MULAI TRANSAKSI
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setObjectName("pushButton")
+        self.pushButton.setFixedSize(FIXED_WIDTH, FIXED_HEIGHT)
+        button_container.addWidget(self.pushButton)
+
+        # BUTTON LIHAT LAPORAN
+        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_3.setFixedSize(FIXED_WIDTH, FIXED_HEIGHT)
+        button_container.addWidget(self.pushButton_3)
+
+        content_layout.addLayout(button_container)
+        
+        # Tambahkan content container ke root layout
+        root_layout.addWidget(content_container, 0, QtCore.Qt.AlignCenter) 
+
+        # Tambahkan stretch di bawah untuk centering vertikal
+        root_layout.addStretch(1)
+
+        # ======================= End Layout Setup =======================
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -82,15 +161,15 @@ class Ui_MainWindow(object):
         # ================= EVENTS =================
         self.pushButton.clicked.connect(self.openFormTransaksi)
         self.pushButton_3.clicked.connect(self.openLaporan)
-        self.pushButton_logout.clicked.connect(self.logout)  # <--- logika logout aktif
+        self.pushButton_logout.clicked.connect(self.logout)
 
     def retranslateUi(self, MainWindow):
         _ = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_("MainWindow", "Dashboard Kasir"))
-        self.pushButton.setText(_("MainWindow", "MULAI TRANSAKSI"))
+        self.pushButton.setText(_("MainWindow", "MULAI TRANSAKSI 🛒"))
         self.label.setText(_("MainWindow", "DASHBOARD KASIR"))
-        self.pushButton_3.setText(_("MainWindow", "LIHAT LAPORAN"))
-        self.pushButton_logout.setText(_("MainWindow", "LOGOUT"))
+        self.pushButton_3.setText(_("MainWindow", "LIHAT LAPORAN 📈"))
+        self.pushButton_logout.setText(_("MainWindow", "LOGOUT 🚪"))
 
     # ==================== FORM TRANSAKSI ====================
     def openFormTransaksi(self):
@@ -110,12 +189,11 @@ class Ui_MainWindow(object):
 
     # ==================== LOGOUT ====================
     def logout(self):
-        print("Logout clicked!")
-
         # Pastikan path benar
         import os, sys
         base_path = os.path.dirname(os.path.dirname(__file__))
-        sys.path.append(base_path)
+        if base_path not in sys.path:
+            sys.path.append(base_path)
 
         # Import form login
         from ui.form_login import Ui_MainWindow as LoginForm
@@ -133,9 +211,15 @@ class Ui_MainWindow(object):
 # ================= MAIN RUN =================
 if __name__ == "__main__":
     import sys
+    
+    # Dummy user login for testing
+    class DummyUser:
+        def __init__(self):
+            self.nama = "Kasir Test"
+    
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui.setupUi(MainWindow, DummyUser())
     MainWindow.show()
     sys.exit(app.exec_())

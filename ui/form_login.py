@@ -2,127 +2,140 @@
 
 from models.User import User
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QGraphicsDropShadowEffect
+from PyQt5.QtWidgets import QGraphicsDropShadowEffect, QVBoxLayout, QHBoxLayout, QGridLayout, QMessageBox
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         self.main_window = MainWindow
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(900, 700) # Sedikit diperbesar agar lega
+        MainWindow.resize(900, 700) 
         
-        # --- BACKGROUND WINDOW UTAMA ---
-        # Warna background gelap elegan (Midnight Blue)
-        MainWindow.setStyleSheet("background-color: #2c3e50;") 
+        # --- BACKGROUND WINDOW UTAMA: Teal Sangat Muda (Hangat) ---
+        MainWindow.setStyleSheet("background-color: #e0f7fa;") 
         
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
+        # Layout Root untuk Centering Card (Horizontal dan Vertikal)
+        root_layout = QVBoxLayout(self.centralwidget)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setAlignment(QtCore.Qt.AlignCenter) 
+
         # --- CONTAINER (CARD) ---
-        # Frame putih di tengah sebagai wadah form
         self.frame_login = QtWidgets.QFrame(self.centralwidget)
-        self.frame_login.setGeometry(QtCore.QRect(250, 100, 400, 500))
+        self.frame_login.setFixedSize(450, 550) # Diperbesar sedikit agar lega
         self.frame_login.setStyleSheet("""
             QFrame {
                 background-color: #FFFFFF;
-                border-radius: 20px;
+                border-radius: 30px; /* Lebih membulat */
             }
         """)
-        self.frame_login.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_login.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_login.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.frame_login.setObjectName("frame_login")
 
-        # Efek Bayangan pada Card agar terlihat timbul (3D effect)
+        # Efek Bayangan pada Card
         shadow = QGraphicsDropShadowEffect()
-        shadow.setBlurRadius(20)
+        shadow.setBlurRadius(40)
         shadow.setXOffset(0)
-        shadow.setYOffset(5)
-        shadow.setColor(QtGui.QColor(0, 0, 0, 80))
+        shadow.setYOffset(15)
+        shadow.setColor(QtGui.QColor(0, 0, 0, 100))
         self.frame_login.setGraphicsEffect(shadow)
-
+        
+        # --- Layout Internal Card (QVBoxLayout) ---
+        card_layout = QVBoxLayout(self.frame_login)
+        card_layout.setContentsMargins(60, 50, 60, 50)
+        card_layout.setSpacing(15)
+        
         # --- JUDUL UTAMA ---
         self.label_title = QtWidgets.QLabel(self.frame_login)
-        self.label_title.setGeometry(QtCore.QRect(0, 40, 400, 50))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI")
-        font.setPointSize(22)
-        font.setBold(True)
-        self.label_title.setFont(font)
-        self.label_title.setStyleSheet("color: #2c3e50; background: transparent;")
+        # Font Lembut
+        self.label_title.setFont(QtGui.QFont("Tahoma", 26, QtGui.QFont.Bold))
+        self.label_title.setStyleSheet("color: #00bcd4; background: transparent;") # Teal
         self.label_title.setAlignment(QtCore.Qt.AlignCenter)
         self.label_title.setObjectName("label_title")
-        self.label_title.setText("WELCOME BACK")
+        self.label_title.setText("PETSHOP 🐾")
+        card_layout.addWidget(self.label_title)
 
         # --- SUB JUDUL ---
         self.label_subtitle = QtWidgets.QLabel(self.frame_login)
-        self.label_subtitle.setGeometry(QtCore.QRect(0, 90, 400, 20))
-        font_sub = QtGui.QFont()
-        font_sub.setFamily("Segoe UI")
-        font_sub.setPointSize(10)
-        self.label_subtitle.setFont(font_sub)
+        self.label_subtitle.setFont(QtGui.QFont("Arial", 12))
         self.label_subtitle.setStyleSheet("color: #7f8c8d; background: transparent;")
         self.label_subtitle.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_subtitle.setText("Please sign in to continue")
+        self.label_subtitle.setText("Silakan masuk untuk melanjutkan")
+        card_layout.addWidget(self.label_subtitle)
+        
+        card_layout.addSpacing(30) 
 
         # --- STYLE INPUT FIELD (CSS) ---
         input_style = """
             QLineEdit {
-                background-color: #ecf0f1;
-                border: 2px solid #ecf0f1;
-                border-radius: 10px;
-                padding-left: 15px;
-                color: #2c3e50;
-                font-size: 14px;
+                background-color: #f5f5f5; /* Abu-abu sangat muda */
+                border: 1px solid #cfd8dc; 
+                border-radius: 18px; /* Lebih membulat */
+                padding: 10px 20px;
+                color: #4a4a4a;
+                font-size: 15px;
+                font-family: Arial;
             }
             QLineEdit:focus {
-                border: 2px solid #3498db;
+                border: 2px solid #ff9800; /* Orange Ceria saat fokus */
                 background-color: #FFFFFF;
             }
         """
 
         # --- INPUT USERNAME ---
         self.label_user = QtWidgets.QLabel(self.frame_login)
-        self.label_user.setGeometry(QtCore.QRect(50, 150, 100, 20))
-        self.label_user.setFont(QtGui.QFont("Segoe UI", 10, QtGui.QFont.Bold))
-        self.label_user.setStyleSheet("color: #2c3e50;")
+        self.label_user.setFont(QtGui.QFont("Arial", 11, QtGui.QFont.Bold))
+        self.label_user.setStyleSheet("color: #4a4a4a;")
         self.label_user.setText("Username")
+        card_layout.addWidget(self.label_user)
 
         self.input_username = QtWidgets.QLineEdit(self.frame_login)
-        self.input_username.setGeometry(QtCore.QRect(50, 175, 300, 45))
+        self.input_username.setFixedSize(330, 50)
         self.input_username.setStyleSheet(input_style)
-        self.input_username.setPlaceholderText("Enter your username")
+        self.input_username.setPlaceholderText("Masukkan Username Anda")
+        card_layout.addWidget(self.input_username, 0, QtCore.Qt.AlignCenter)
 
         # --- INPUT PASSWORD ---
         self.label_pass = QtWidgets.QLabel(self.frame_login)
-        self.label_pass.setGeometry(QtCore.QRect(50, 240, 100, 20))
-        self.label_pass.setFont(QtGui.QFont("Segoe UI", 10, QtGui.QFont.Bold))
-        self.label_pass.setStyleSheet("color: #2c3e50;")
+        self.label_pass.setFont(QtGui.QFont("Arial", 11, QtGui.QFont.Bold))
+        self.label_pass.setStyleSheet("color: #4a4a4a;")
         self.label_pass.setText("Password")
+        card_layout.addWidget(self.label_pass)
 
         self.input_password = QtWidgets.QLineEdit(self.frame_login)
-        self.input_password.setGeometry(QtCore.QRect(50, 265, 300, 45))
+        self.input_password.setFixedSize(330, 50)
         self.input_password.setStyleSheet(input_style)
         self.input_password.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.input_password.setPlaceholderText("Enter your password")
+        self.input_password.setPlaceholderText("Masukkan Password Anda")
+        card_layout.addWidget(self.input_password, 0, QtCore.Qt.AlignCenter)
+        
+        card_layout.addSpacing(30) 
 
         # --- TOMBOL LOGIN ---
         self.btn_login = QtWidgets.QPushButton(self.frame_login)
-        self.btn_login.setGeometry(QtCore.QRect(50, 360, 300, 50))
-        self.btn_login.setFont(QtGui.QFont("Segoe UI", 12, QtGui.QFont.Bold))
+        self.btn_login.setFixedSize(330, 55)
+        self.btn_login.setFont(QtGui.QFont("Arial", 14, QtGui.QFont.Bold))
         self.btn_login.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_login.setStyleSheet("""
             QPushButton {
-                background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #3498db, stop:1 #2980b9);
+                background-color: #00bcd4; /* Teal Solid */
                 color: white;
-                border-radius: 25px;
+                border-radius: 27px; 
+                box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4); 
             }
             QPushButton:hover {
-                background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #2980b9, stop:1 #3498db);
+                background-color: #0097a7;
             }
             QPushButton:pressed {
-                background-color: #1abc9c;
+                background-color: #00838f;
             }
         """)
         self.btn_login.setText("LOGIN")
+        card_layout.addWidget(self.btn_login, 0, QtCore.Qt.AlignCenter)
+
+        # Tambahkan Card ke Root Layout (sudah di-center)
+        root_layout.addWidget(self.frame_login)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
@@ -133,24 +146,26 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Login System"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Login System - Petshop"))
 
     # ================= LOGIN LOGIC =================
     def login(self):
+        # NOTE: Mengganti QMessageBox standar dengan pesan yang lebih lucu/ramah
+        
         username = self.input_username.text()
         password = self.input_password.text()
 
-        # Validasi sederhana agar tidak kosong
         if not username or not password:
-             QtWidgets.QMessageBox.warning(None, "Peringatan", "Harap isi username dan password!")
-             return
+            QMessageBox.warning(None, "Waduh, Kosong!", "Harap isi username dan password dulu ya!")
+            return
 
         try:
             user = User(username, password)
 
             if user.login():
                 self.user_login = user  
-
+                
+                # Navigasi berdasarkan role
                 if user.role == "admin":
                     self.openDashboardAdmin()
                 elif user.role == "supervisor":
@@ -160,11 +175,11 @@ class Ui_MainWindow(object):
 
                 self.main_window.hide()
             else:
-                QtWidgets.QMessageBox.warning(
-                    None, "Login Gagal", "Username atau password salah!"
+                QMessageBox.warning(
+                    None, "Login Gagal 😿", "Username atau password salah! Coba lagi."
                 )
         except Exception as e:
-             QtWidgets.QMessageBox.critical(None, "Error System", f"Terjadi kesalahan: {e}")
+             QMessageBox.critical(None, "Error System 🚨", f"Terjadi kesalahan koneksi/sistem: {e}")
 
     # ================= DASHBOARD NAV =================
     def openDashboardAdmin(self):

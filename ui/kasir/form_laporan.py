@@ -193,7 +193,7 @@ class Ui_FormLaporan(object):
         # ===== FOOTER =====
         self.footerLayout = QtWidgets.QHBoxLayout()
 
-        self.btnBack = QtWidgets.QPushButton("⬅ Kembali ke Dashboard")
+        self.btnBack = QtWidgets.QPushButton("⬅ Kembali")
         self.btnBack.setObjectName("btnBack")
         self.btnBack.setFixedWidth(200)
         self.btnBack.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
